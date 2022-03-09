@@ -1,15 +1,21 @@
 <!doctype html>
 <html lang="pl">
 <head>
-    <?php
-    if (isset($_GET['gtm'])) {
-        echo "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>
+        function getURLParameter(name) {
+            return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1] || '');
+        }
+
+        if (getURLParameter('gtm') !== '') {
+            document.head.innerHTML = `
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','GTM-" . $_GET['gtm'] . "');</script>";
-    }
-    ?>
+            })(window,document,'script','dataLayer','GTM-${getURLParameter('gtm')}');<\/script>
+            `
+        }
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -22,12 +28,14 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<?php
-if (isset($_GET['gtm'])) {
-    echo "<noscript><iframe src='https://www.googletagmanager.com/ns.html?id=GTM-" . $_GET['gtm'] . "'
-                  height='0' width='0' style='display:none;visibility:hidden'></iframe></noscript>";
-}
-?>
+<script>
+    if (getURLParameter('gtm') !== '') {
+        document.write(`
+            <noscript><iframe src='https://www.googletagmanager.com/ns.html?id=GTM-${getURLParameter('gtm')}'
+                  height='0' width='0' style='display:none;visibility:hidden'></iframe></noscript>
+            `)
+    }
+</script>
 <div class="app">
     <header class="header">
         <div class="container">
@@ -261,10 +269,6 @@ if (isset($_GET['gtm'])) {
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
 <script>
-    function getURLParameter(name) {
-        return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1] || '');
-    }
-
     (function (w, d) {
         w.addEventListener('DOMContentLoaded', function () {
 
@@ -316,7 +320,7 @@ if (isset($_GET['gtm'])) {
             },
             success: function (response) {
                 if (response.status.result === 'success') {
-                    window.location.href = `success.php?link=${response.status.link}`
+                    window.location.href = `success.html?link=${response.status.link}`
                 }
             }
         });
